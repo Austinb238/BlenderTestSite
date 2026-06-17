@@ -218,6 +218,27 @@ document.querySelectorAll(".marquee-wrap").forEach((el) => {
   });
 });
 
+/* ---------- Gallery overlay ---------- */
+const galleryTab = document.getElementById("gallery-tab");
+const galleryOverlay = document.getElementById("gallery-overlay");
+const galleryClose = document.getElementById("gallery-close");
+
+function openGallery(e) {
+  if (e) e.preventDefault();
+  galleryOverlay.classList.add("open");
+  galleryOverlay.setAttribute("aria-hidden", "false");
+  lenis.stop();                       // freeze background scroll while open
+}
+function closeGallery() {
+  galleryOverlay.classList.remove("open");
+  galleryOverlay.setAttribute("aria-hidden", "true");
+  lenis.start();
+}
+if (galleryTab) galleryTab.addEventListener("click", openGallery);
+if (galleryClose) galleryClose.addEventListener("click", closeGallery);
+galleryOverlay.addEventListener("click", (e) => { if (e.target === galleryOverlay) closeGallery(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeGallery(); });
+
 /* ---------- Init ---------- */
 window.addEventListener("resize", sizeCanvas);
 sizeCanvas();

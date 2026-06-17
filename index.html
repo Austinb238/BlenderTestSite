@@ -24,6 +24,7 @@
       <div class="nav-links">
         <a href="#">Technology</a>
         <a href="#">Specs</a>
+        <a href="#" id="gallery-tab">Gallery</a>
         <a href="#">Buy</a>
       </div>
     </nav>
@@ -113,6 +114,19 @@
       </div>
     </section>
 
+  </div>
+
+  <!-- Gallery overlay (opened by the Gallery tab) -->
+  <div id="gallery-overlay" aria-hidden="true">
+    <button id="gallery-close" aria-label="Close gallery">&times;</button>
+    <div class="gallery-inner">
+      <h2 class="gallery-title">Bradley Austin — Nano Banana Edits</h2>
+      <div class="gallery-grid">
+        <figure><img src="gallery/younger.jpg" alt="Bradley Austin, younger" loading="lazy" /><figcaption>Younger</figcaption></figure>
+        <figure><img src="gallery/older.jpg" alt="Bradley Austin at 80" loading="lazy" /><figcaption>80 years old</figcaption></figure>
+        <figure><img src="gallery/park.jpg" alt="Bradley Austin with park &amp; waterfall background" loading="lazy" /><figcaption>Park &amp; waterfall</figcaption></figure>
+      </div>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
