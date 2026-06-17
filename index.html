@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LUMÉ — The Blender That Moves Itself</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <!-- 1. Loader -->
+  <div id="loader">
+    <div class="loader-brand">LUMÉ</div>
+    <div id="loader-bar"><span id="loader-fill"></span></div>
+    <div id="loader-percent">0%</div>
+  </div>
+
+  <!-- 2. Header -->
+  <header class="site-header">
+    <nav>
+      <a class="logo" href="#">LUMÉ</a>
+      <div class="nav-links">
+        <a href="#">Technology</a>
+        <a href="#">Specs</a>
+        <a href="#">Buy</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- 3. Hero (standalone 100vh) -->
+  <section class="hero-standalone" id="hero">
+    <span class="section-label">001 / Introducing</span>
+    <h1 class="hero-heading">
+      <span>The</span> <span>blender</span> <span>that</span>
+      <span>moves</span> <span class="accent">itself.</span>
+    </h1>
+    <p class="hero-tagline">No hands. No mess. Just motion.</p>
+    <div class="scroll-indicator"><span>Scroll</span><i></i></div>
+  </section>
+
+  <!-- 4. Canvas -->
+  <div class="canvas-wrap">
+    <canvas id="canvas"></canvas>
+  </div>
+
+  <!-- 5. Dark overlay -->
+  <div id="dark-overlay"></div>
+
+  <!-- 6. Marquee -->
+  <div class="marquee-wrap" data-scroll-speed="-28" data-enter="40" data-leave="56">
+    <div class="marquee-text">FRESH · EFFORTLESS · MAGIC · FRESH · EFFORTLESS · MAGIC ·</div>
+  </div>
+
+  <!-- 7. Scroll container -->
+  <div id="scroll-container">
+
+    <section class="scroll-section section-content align-left"
+             data-enter="14" data-leave="30" data-animation="slide-left">
+      <div class="section-inner">
+        <span class="section-label">002 / Levitation</span>
+        <h2 class="section-heading">The lid lifts itself.</h2>
+        <p class="section-body">A silent magnetic field releases the lid and holds it in mid-air — so loading is effortless, every single time.</p>
+      </div>
+    </section>
+
+    <section class="scroll-section section-content align-right"
+             data-enter="30" data-leave="44" data-animation="slide-right">
+      <div class="section-inner">
+        <span class="section-label">003 / Flow</span>
+        <h2 class="section-heading">Fruit floats in.</h2>
+        <p class="section-body">Berries and banana descend in graceful slow motion. Juice pours from nowhere. Nothing touches the glass but what belongs inside.</p>
+      </div>
+    </section>
+
+    <section class="scroll-section section-stats"
+             data-enter="58" data-leave="74" data-animation="stagger-up">
+      <div class="stats-grid">
+        <div class="stat">
+          <span class="stat-number" data-value="24000" data-decimals="0">0</span>
+          <span class="stat-suffix">rpm</span>
+          <span class="stat-label">Vortex motor</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number" data-value="8" data-decimals="0">0</span>
+          <span class="stat-suffix">presets</span>
+          <span class="stat-label">One-touch blends</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number" data-value="0.3" data-decimals="1">0</span>
+          <span class="stat-suffix">sec</span>
+          <span class="stat-label">Lid release</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="scroll-section section-content align-left"
+             data-enter="76" data-leave="88" data-animation="clip-reveal">
+      <div class="section-inner">
+        <span class="section-label">004 / Craft</span>
+        <h2 class="section-heading">Borosilicate glass. Brushed alloy base.</h2>
+        <p class="section-body">Built from materials that outlast trends — engineered to feel as considered as it looks.</p>
+      </div>
+    </section>
+
+    <section class="scroll-section section-cta align-center"
+             data-enter="90" data-leave="100" data-animation="scale-up" data-persist="true">
+      <div class="section-inner">
+        <span class="section-label">005 / Yours</span>
+        <h2 class="section-heading">Bring the magic home.</h2>
+        <a class="cta-button" href="#">Pre-order LUMÉ</a>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
