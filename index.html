@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/style.css?v=2" />
+  <link rel="stylesheet" href="css/style.css?v=3" />
 </head>
 <body>
   <!-- 1. Loader -->
@@ -22,10 +22,10 @@
     <nav>
       <a class="logo" href="#">LUMÉ</a>
       <div class="nav-links">
-        <a href="#">Technology</a>
-        <a href="#">Specs</a>
         <a href="#" id="gallery-tab">Gallery</a>
         <a href="#" id="docker-tab">Docker</a>
+        <a href="#" id="cyber-tab">CyberSecurity</a>
+        <a href="#" id="cs-tab">Computer Science</a>
         <a href="#">Buy</a>
       </div>
     </nav>
@@ -130,6 +130,22 @@
     </div>
   </div>
 
+  <!-- CyberSecurity overlay -->
+  <div id="cyber-overlay" aria-hidden="true">
+    <button id="cyber-close" aria-label="Close CyberSecurity study">&times;</button>
+    <div class="study-inner">
+      <iframe src="pdfs/cybersecurity-feasibility.pdf" title="MS CyberSecurity Feasibility Study"></iframe>
+    </div>
+  </div>
+
+  <!-- Computer Science overlay -->
+  <div id="cs-overlay" aria-hidden="true">
+    <button id="cs-close" aria-label="Close Computer Science study">&times;</button>
+    <div class="study-inner">
+      <iframe src="pdfs/cs-feasibility.pdf" title="MS Computer Science Feasibility Study"></iframe>
+    </div>
+  </div>
+
   <!-- Docker overlay (opened by the Docker tab) -->
   <div id="docker-overlay" aria-hidden="true">
     <button id="docker-close" aria-label="Close Docker image">&times;</button>
@@ -142,6 +158,6 @@
   <script src="https://cdn.jsdelivr.net/npm/lenis@1/dist/lenis.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
-  <script src="js/app.js?v=2"></script>
+  <script src="js/app.js?v=3"></script>
 </body>
 </html>

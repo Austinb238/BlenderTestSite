@@ -258,7 +258,47 @@ if (dockerTab) dockerTab.addEventListener("click", openDocker);
 if (dockerClose) dockerClose.addEventListener("click", closeDocker);
 dockerOverlay.addEventListener("click", (e) => { if (e.target === dockerOverlay) closeDocker(); });
 
-document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeGallery(); closeDocker(); } });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") { closeGallery(); closeDocker(); closeCyber(); closeCS(); } });
+
+/* ---------- CyberSecurity overlay ---------- */
+const cyberTab = document.getElementById("cyber-tab");
+const cyberOverlay = document.getElementById("cyber-overlay");
+const cyberClose = document.getElementById("cyber-close");
+
+function openCyber(e) {
+  if (e) e.preventDefault();
+  cyberOverlay.classList.add("open");
+  cyberOverlay.setAttribute("aria-hidden", "false");
+  lenis.stop();
+}
+function closeCyber() {
+  cyberOverlay.classList.remove("open");
+  cyberOverlay.setAttribute("aria-hidden", "true");
+  lenis.start();
+}
+if (cyberTab) cyberTab.addEventListener("click", openCyber);
+if (cyberClose) cyberClose.addEventListener("click", closeCyber);
+cyberOverlay.addEventListener("click", (e) => { if (e.target === cyberOverlay) closeCyber(); });
+
+/* ---------- Computer Science overlay ---------- */
+const csTab = document.getElementById("cs-tab");
+const csOverlay = document.getElementById("cs-overlay");
+const csClose = document.getElementById("cs-close");
+
+function openCS(e) {
+  if (e) e.preventDefault();
+  csOverlay.classList.add("open");
+  csOverlay.setAttribute("aria-hidden", "false");
+  lenis.stop();
+}
+function closeCS() {
+  csOverlay.classList.remove("open");
+  csOverlay.setAttribute("aria-hidden", "true");
+  lenis.start();
+}
+if (csTab) csTab.addEventListener("click", openCS);
+if (csClose) csClose.addEventListener("click", closeCS);
+csOverlay.addEventListener("click", (e) => { if (e.target === csOverlay) closeCS(); });
 
 /* ---------- Init ---------- */
 window.addEventListener("resize", sizeCanvas);
