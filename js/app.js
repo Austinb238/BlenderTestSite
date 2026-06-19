@@ -6,6 +6,8 @@ function makeOverlay(tabId, overlayId, closeId) {
   const close   = document.getElementById(closeId);
   const video   = document.getElementById("hero-video");
 
+  if (!overlay) return () => {};
+
   function open(e) {
     if (e) e.preventDefault();
     overlay.classList.add("open");
@@ -32,7 +34,7 @@ const closeCS      = makeOverlay("cs-tab",      "cs-overlay",      "cs-close");
 const closeBuy     = makeOverlay("buy-tab",     "buy-overlay",     "buy-close");
 
 const ctaBuy = document.getElementById("cta-buy");
-if (ctaBuy) ctaBuy.addEventListener("click", (e) => { e.preventDefault(); document.getElementById("buy-overlay").classList.add("open"); document.getElementById("buy-overlay").setAttribute("aria-hidden","false"); const v = document.getElementById("hero-video"); if(v) v.pause(); });
+if (ctaBuy) ctaBuy.addEventListener("click", (e) => { e.preventDefault(); document.getElementById("buy-tab").click(); });
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") { closeGallery(); closeDocker(); closeCyber(); closeCS(); closeBuy(); }
