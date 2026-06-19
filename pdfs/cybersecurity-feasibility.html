@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Feasibility Study — MS in CyberSecurity | USC Upstate</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap');
+  :root {
+    --garnet: #73000a;
+    --gold: #c5a858;
+    --accent: #1b4f72;
+    --light: #f9f7f4;
+    --border: #ddd;
+    --text: #1e1e1e;
+    --muted: #666;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Source Sans 3',sans-serif; color:var(--text); background:#fff; font-size:11.5pt; line-height:1.7; }
+
+  /* COVER */
+  .cover {
+    background:var(--garnet); color:#fff;
+    min-height:100vh; display:flex; flex-direction:column;
+    justify-content:center; align-items:center; text-align:center;
+    padding:4rem 3rem; page-break-after:always;
+  }
+  .cover-icon { font-size:5rem; margin-bottom:1.5rem; }
+  .cover-label { font-size:.8rem; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.65); }
+  .gold-bar { width:70px; height:4px; background:var(--gold); margin:1.2rem auto; }
+  .cover-title { font-family:'Merriweather',serif; font-size:2.7rem; font-weight:700; line-height:1.18; max-width:20ch; margin:.5rem 0 1.2rem; }
+  .cover-sub { font-size:1.05rem; color:rgba(255,255,255,.78); max-width:44ch; margin-bottom:3rem; }
+  .cover-meta { border-top:1px solid rgba(255,255,255,.25); padding-top:2rem; display:flex; gap:3.5rem; justify-content:center; flex-wrap:wrap; }
+  .cover-meta div { display:flex; flex-direction:column; gap:.25rem; }
+  .cover-meta .lbl { font-size:.72rem; text-transform:uppercase; letter-spacing:.14em; color:rgba(255,255,255,.55); }
+  .cover-meta .val { font-size:.95rem; font-weight:600; }
+
+  /* LAYOUT */
+  .page { max-width:870px; margin:0 auto; padding:3.5rem 3rem; }
+  .pg-break { page-break-before:always; }
+
+  /* HEADINGS */
+  h1.sec { font-family:'Merriweather',serif; font-size:1.55rem; color:var(--garnet); border-bottom:3px solid var(--garnet); padding-bottom:.45rem; margin:2.5rem 0 1.6rem; }
+  h1.sec:first-child { margin-top:0; }
+  h2.sub { font-size:1.08rem; font-weight:700; color:var(--accent); margin:1.6rem 0 .6rem; }
+  h3.minor { font-size:.97rem; font-weight:700; color:var(--text); margin:1.1rem 0 .4rem; }
+  p { margin-bottom:.9rem; }
+  p:last-child { margin-bottom:0; }
+
+  /* CALLOUT */
+  .callout { background:var(--light); border-left:4px solid var(--garnet); padding:1.1rem 1.4rem; border-radius:0 6px 6px 0; margin:1.4rem 0; }
+  .callout p { margin:0; }
+
+  /* KPI */
+  .kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin:1.6rem 0; }
+  .kpi { background:var(--garnet); color:#fff; border-radius:8px; padding:1.2rem .8rem; text-align:center; }
+  .kpi .num { font-family:'Merriweather',serif; font-size:1.9rem; font-weight:700; line-height:1.1; }
+  .kpi .lbl { font-size:.7rem; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.75); margin-top:.35rem; }
+
+  /* TABLES */
+  table { width:100%; border-collapse:collapse; margin:1.1rem 0; font-size:.9rem; }
+  th { background:var(--garnet); color:#fff; padding:.6rem .85rem; text-align:left; font-weight:600; font-size:.88rem; }
+  td { padding:.52rem .85rem; border-bottom:1px solid var(--border); vertical-align:top; }
+  tr:nth-child(even) td { background:#faf8f5; }
+  tr:last-child td { border-bottom:none; }
+  .pos { color:#1a6b3c; font-weight:700; }
+  .neg { color:#8b0000; font-weight:700; }
+
+  /* CHARTS */
+  .chart-wrap { background:var(--light); border-radius:8px; padding:1.4rem; margin:1.4rem 0; }
+  .chart-wrap .chart-title { font-size:.8rem; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin-bottom:.9rem; font-weight:600; }
+  .chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.4rem; }
+  canvas { max-height:270px; }
+
+  /* SWOT */
+  .swot { display:grid; grid-template-columns:1fr 1fr; gap:.9rem; margin:1.4rem 0; }
+  .swot-box { border-radius:8px; padding:1.1rem 1.3rem; }
+  .swot-box h3 { font-size:.78rem; text-transform:uppercase; letter-spacing:.14em; margin-bottom:.7rem; font-weight:700; }
+  .swot-box ul { padding-left:1.1rem; font-size:.87rem; }
+  .swot-box li { margin-bottom:.35rem; }
+  .sw-s { background:#e8f5e9; } .sw-s h3 { color:#1b5e20; }
+  .sw-w { background:#fff3e0; } .sw-w h3 { color:#bf360c; }
+  .sw-o { background:#e3f2fd; } .sw-o h3 { color:#0d47a1; }
+  .sw-t { background:#fce4ec; } .sw-t h3 { color:#880e4f; }
+
+  /* TIMELINE */
+  .timeline { border-left:3px solid var(--garnet); margin:1.4rem 0 1.4rem 1rem; padding-left:1.6rem; }
+  .tl { position:relative; margin-bottom:1.4rem; }
+  .tl::before { content:''; position:absolute; left:-2.2rem; top:.35rem; width:11px; height:11px; background:var(--garnet); border-radius:50%; }
+  .tl-date { font-size:.73rem; text-transform:uppercase; letter-spacing:.15em; color:var(--garnet); font-weight:700; }
+  .tl-name { font-weight:700; margin:.15rem 0 .1rem; }
+  .tl-desc { font-size:.87rem; color:var(--muted); }
+
+  /* CITATION LINK */
+  a.cit { color:var(--garnet); text-decoration:none; font-size:.85em; vertical-align:super; font-weight:600; }
+  a.cit:hover { text-decoration:underline; }
+
+  /* REFERENCES */
+  .ref-list { font-size:.85rem; }
+  .ref-list li { margin-bottom:.75rem; padding-left:.3rem; }
+  .ref-list a { color:var(--accent); word-break:break-all; }
+
+  /* FOOTER */
+  .pg-foot { margin-top:3rem; padding-top:.9rem; border-top:2px solid var(--border); display:flex; justify-content:space-between; font-size:.77rem; color:var(--muted); }
+
+  @media print {
+    .cover { min-height:100vh; }
+    .pg-break { page-break-before:always; }
+    canvas { max-height:230px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-icon">🛡️</div>
+  <div class="cover-label">University of South Carolina Upstate</div>
+  <div class="gold-bar"></div>
+  <div class="cover-title">Master of Science in CyberSecurity</div>
+  <div class="cover-sub">Program Feasibility Study and Market Analysis for a Proposed Online Graduate Degree</div>
+  <div class="cover-meta">
+    <div><span class="lbl">Prepared For</span><span class="val">USC Upstate Academic Affairs</span></div>
+    <div><span class="lbl">Program Format</span><span class="val">Online / Hybrid</span></div>
+    <div><span class="lbl">Report Date</span><span class="val">June 2026</span></div>
+    <div><span class="lbl">Proposed Launch</span><span class="val">Fall 2027</span></div>
+  </div>
+</div>
+
+<!-- PAGE 1: EXECUTIVE SUMMARY -->
+<div class="page">
+  <h1 class="sec">Executive Summary</h1>
+
+  <p>This feasibility study examines the opportunity for USC Upstate to launch a fully online Master of Science in CyberSecurity. The analysis draws on national workforce data, South Carolina labor market statistics, competitor program reviews, and internal cost modeling to determine whether this program is educationally sound, financially viable, and strategically aligned with the university's mission.</p>
+
+  <p>The short answer is yes. The United States faces a documented shortage of credentialed cybersecurity professionals that is not closing on its own.<a href="#ref1" class="cit">[1]</a> South Carolina's technology sector has expanded substantially since 2020, and the Upstate region in particular lacks a public, affordable online graduate option in this field.<a href="#ref2" class="cit">[2]</a> USC Upstate is well positioned to fill that gap.</p>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="num">3.5M</div><div class="lbl">Global unfilled cyber positions (2025)</div></div>
+    <div class="kpi"><div class="num">$127K</div><div class="lbl">Median MS CyberSecurity salary</div></div>
+    <div class="kpi"><div class="num">32%</div><div class="lbl">10-year job growth (BLS projection)</div></div>
+    <div class="kpi"><div class="num">$2.9M</div><div class="lbl">Projected cumulative net revenue (Yr 1–5)</div></div>
+  </div>
+
+  <div class="callout">
+    <p><strong>Recommendation: Proceed.</strong> A USC Upstate MS in CyberSecurity can reach financial break-even with as few as 28 enrolled students and is projected to generate positive net revenue beginning in Year 2. The market opportunity is real, the regional competition is thin, and the university has the infrastructure to move quickly if governance approval is secured in Q3 2026.</p>
+  </div>
+
+  <h2 class="sub">What This Study Covers</h2>
+  <p>The sections that follow address national and regional workforce demand, a competitive review of comparable graduate programs, a detailed proposed curriculum, five-year financial modeling, a SWOT analysis, and a phased implementation timeline with recommended next steps. A full list of sources appears at the end of the document.</p>
+
+  <div class="pg-foot"><span>USC Upstate — MS in CyberSecurity Feasibility Study</span><span>Page 1</span></div>
+</div>
+
+<!-- PAGE 2: MARKET ANALYSIS -->
+<div class="page pg-break">
+  <h1 class="sec">Market Analysis</h1>
+
+  <h2 class="sub">National Workforce Demand</h2>
+  <p>The Bureau of Labor Statistics projects that employment for Information Security Analysts will grow 32 percent through 2032, a rate more than four times the national average for all occupations.<a href="#ref3" class="cit">[3]</a> That figure reflects persistent pressure from several directions at once: escalating ransomware campaigns, mandatory federal compliance frameworks such as CMMC 2.0 and NIST CSF 2.0, rapid cloud migration across every industry, and the emerging use of artificial intelligence as both an attack tool and a defense mechanism.</p>
+
+  <p>Cybersecurity Ventures estimated that the global shortfall of qualified cybersecurity professionals reached 3.5 million open positions in 2025.<a href="#ref4" class="cit">[4]</a> That number has remained stubbornly high despite years of increased program offerings, largely because the pace of hiring outstrips the supply of credentialed graduates. The (ISC)² 2025 Cybersecurity Workforce Study found that 67 percent of organizations reported having too few cybersecurity staff to respond effectively to current threats — up from 52 percent in 2022.<a href="#ref5" class="cit">[5]</a></p>
+
+  <div class="chart-grid">
+    <div class="chart-wrap">
+      <div class="chart-title">U.S. Cybersecurity Job Openings — 2020 to 2028 (Thousands)</div>
+      <canvas id="jobChart"></canvas>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">Median Annual Salaries by Cybersecurity Role</div>
+      <canvas id="salaryChart"></canvas>
+    </div>
+  </div>
+
+  <h2 class="sub">South Carolina and Upstate Regional Demand</h2>
+  <p>South Carolina's cybersecurity employment base grew 41 percent between 2020 and 2025, driven by manufacturing expansion along the BMW-Michelin-Boeing corridor, growth in financial services in Columbia and Greenville, and the enduring presence of Fort Jackson and related defense contractors in the Midlands region.<a href="#ref6" class="cit">[6]</a> The South Carolina Department of Employment and Workforce tracked 1,481 active cybersecurity job postings in Q1 2026 alone, with average salary offers exceeding $115,000 — well above the state's median household income.<a href="#ref7" class="cit">[7]</a></p>
+
+  <table>
+    <thead><tr><th>Sector</th><th>Active Openings (Q1 2026)</th><th>Year-over-Year Change</th><th>Average Salary Offered</th></tr></thead>
+    <tbody>
+      <tr><td>Manufacturing and Automotive</td><td>412</td><td class="pos">+28%</td><td>$108,400</td></tr>
+      <tr><td>Healthcare and Life Sciences</td><td>338</td><td class="pos">+35%</td><td>$114,200</td></tr>
+      <tr><td>Financial Services</td><td>291</td><td class="pos">+19%</td><td>$122,800</td></tr>
+      <tr><td>Defense and Government</td><td>256</td><td class="pos">+42%</td><td>$131,500</td></tr>
+      <tr><td>Education and Utilities</td><td>184</td><td class="pos">+22%</td><td>$98,700</td></tr>
+      <tr><td><strong>Total</strong></td><td><strong>1,481</strong></td><td class="pos"><strong>+29%</strong></td><td><strong>$115,120 avg.</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sub">Target Student Profile</h2>
+  <p>Based on enrollment patterns at comparable online cybersecurity programs, the prospective student base for this program is likely to skew toward working professionals rather than recent undergraduates. The chart below reflects estimated proportions drawn from peer institution data and regional workforce demographics.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Estimated Prospective Student Composition</div>
+    <canvas id="mixChart" style="max-height:210px;"></canvas>
+  </div>
+
+  <div class="pg-foot"><span>USC Upstate — MS in CyberSecurity Feasibility Study</span><span>Page 2</span></div>
+</div>
+
+<!-- PAGE 3: COMPETITIVE LANDSCAPE -->
+<div class="page pg-break">
+  <h1 class="sec">Competitive Landscape</h1>
+
+  <p>The online graduate cybersecurity market is competitive at the national level, but the regional picture for South Carolina is much more open. No public university in the Upstate region currently offers a fully online MS in CyberSecurity. Clemson University offers cybersecurity coursework at the undergraduate level but has not developed a dedicated graduate program in the field. The University of South Carolina Columbia offers a graduate certificate in cybersecurity but no full degree.<a href="#ref8" class="cit">[8]</a></p>
+
+  <p>The main competitive pressure comes from large national programs with strong brands and, in some cases, aggressive pricing. The table below summarizes the most directly relevant competitors.</p>
+
+  <table>
+    <thead><tr><th>Institution</th><th>Program</th><th>Format</th><th>Credits</th><th>Tuition / Credit</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Georgia Tech</td><td>MS Cybersecurity</td><td>Online</td><td>30</td><td>$310</td><td>Top-ranked nationally; price is the primary draw</td></tr>
+      <tr><td>Purdue Global</td><td>MS Cybersecurity Management</td><td>Online</td><td>36</td><td>$698</td><td>For-profit; strong marketing reach</td></tr>
+      <tr><td>UNC Charlotte</td><td>MS Cybersecurity</td><td>Hybrid</td><td>30</td><td>$715</td><td>North Carolina market; minimal SC brand presence</td></tr>
+      <tr><td>Western Governors</td><td>MS Cybersecurity and IA</td><td>Online</td><td>Competency-based</td><td>$4,225 / 6 mo.</td><td>Flat-rate model; no research component</td></tr>
+      <tr><td>SANS Technology Institute</td><td>MS Information Assurance</td><td>Online</td><td>33</td><td>$3,150</td><td>Certification-heavy; premium pricing</td></tr>
+      <tr><td>Clemson University</td><td>No MS CyberSecurity</td><td>—</td><td>—</td><td>—</td><td class="pos">Clear regional gap</td></tr>
+      <tr><td><strong>USC Upstate (Proposed)</strong></td><td><strong>MS CyberSecurity</strong></td><td><strong>Online</strong></td><td><strong>33</strong></td><td><strong>$750</strong></td><td><strong>Only public online MS in Upstate SC</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Competitive Positioning Map — Price vs. Regional Relevance</div>
+    <canvas id="posChart"></canvas>
+  </div>
+
+  <div class="callout">
+    <p><strong>The strategic opening:</strong> USC Upstate does not need to compete with Georgia Tech on prestige or with WGU on price. The opportunity is to own the "regionally embedded, affordable public university" position — leveraging local employer relationships, smaller cohort sizes, and a name that South Carolina hiring managers already recognize and trust.</p>
+  </div>
+
+  <div class="pg-foot"><span>USC Upstate — MS in CyberSecurity Feasibility Study</span><span>Page 3</span></div>
+</div>
+
+<!-- PAGE 4: PROGRAM STRUCTURE -->
+<div class="page pg-break">
+  <h1 class="sec">Proposed Program Structure</h1>
+
+  <h2 class="sub">Program Overview</h2>
+  <table>
+    <tbody>
+      <tr><td><strong>Degree</strong></td><td>Master of Science in CyberSecurity</td></tr>
+      <tr><td><strong>Total Credit Hours</strong></td><td>33 (11 courses at 3 credits each)</td></tr>
+      <tr><td><strong>Delivery Format</strong></td><td>Fully online; optional in-person intensive sessions</td></tr>
+      <tr><td><strong>Expected Duration</strong></td><td>18–24 months full-time; up to 36 months part-time</td></tr>
+      <tr><td><strong>Admission Requirements</strong></td><td>Bachelor's degree in Computer Science, IT, or a related field; minimum 3.0 GPA; statement of purpose; two professional references</td></tr>
+      <tr><td><strong>Concentrations</strong></td><td>Network Defense and Incident Response; Digital Forensics; Governance, Risk, and Compliance</td></tr>
+      <tr><td><strong>Capstone</strong></td><td>Applied security research project or approved industry practicum</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sub">Curriculum</h2>
+  <p>The curriculum is built around eleven three-credit courses covering the core domains of professional cybersecurity practice. The structure aligns with the NIST NICE Cybersecurity Workforce Framework<a href="#ref9" class="cit">[9]</a> and was developed with reference to ACM and IEEE curricular guidelines for graduate-level security education.<a href="#ref10" class="cit">[10]</a></p>
+
+  <table>
+    <thead><tr><th>Course Number</th><th>Course Title</th><th>Credits</th><th>Type</th></tr></thead>
+    <tbody>
+      <tr><td>CSEC 700</td><td>Foundations of CyberSecurity</td><td>3</td><td>Core</td></tr>
+      <tr><td>CSEC 710</td><td>Network Security and Architecture</td><td>3</td><td>Core</td></tr>
+      <tr><td>CSEC 720</td><td>Cryptography and Applied Security</td><td>3</td><td>Core</td></tr>
+      <tr><td>CSEC 730</td><td>Ethical Hacking and Penetration Testing</td><td>3</td><td>Core</td></tr>
+      <tr><td>CSEC 740</td><td>Digital Forensics and Incident Response</td><td>3</td><td>Core</td></tr>
+      <tr><td>CSEC 750</td><td>Cloud and IoT Security</td><td>3</td><td>Core</td></tr>
+      <tr><td>CSEC 760</td><td>Governance, Risk, and Compliance</td><td>3</td><td>Core</td></tr>
+      <tr><td>CSEC 770</td><td>Artificial Intelligence in Security</td><td>3</td><td>Elective</td></tr>
+      <tr><td>CSEC 780</td><td>Industrial Control Systems Security</td><td>3</td><td>Elective</td></tr>
+      <tr><td>CSEC 790</td><td>Security Leadership and Policy</td><td>3</td><td>Elective</td></tr>
+      <tr><td>CSEC 799</td><td>Capstone Project or Practicum</td><td>3</td><td>Capstone</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sub">Certification Alignment</h2>
+  <p>Students who complete this program will have covered the content domains tested by several high-value industry certifications. Earning these credentials alongside the degree substantially increases graduates' market value.<a href="#ref11" class="cit">[11]</a></p>
+
+  <table>
+    <thead><tr><th>Certification</th><th>Issuing Body</th><th>Aligned Courses</th><th>Avg. Salary Premium</th></tr></thead>
+    <tbody>
+      <tr><td>CompTIA Security+</td><td>CompTIA</td><td>CSEC 700, 710</td><td>+$8,000</td></tr>
+      <tr><td>Certified Ethical Hacker (CEH)</td><td>EC-Council</td><td>CSEC 730</td><td>+$12,000</td></tr>
+      <tr><td>GIAC Forensic Examiner (GCFE)</td><td>GIAC / SANS</td><td>CSEC 740</td><td>+$14,000</td></tr>
+      <tr><td>Certified Information Systems Security Professional (CISSP)</td><td>(ISC)²</td><td>CSEC 700, 760, 790</td><td>+$21,000</td></tr>
+      <tr><td>AWS Security Specialty</td><td>Amazon Web Services</td><td>CSEC 750</td><td>+$16,000</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pg-foot"><span>USC Upstate — MS in CyberSecurity Feasibility Study</span><span>Page 4</span></div>
+</div>
+
+<!-- PAGE 5: FINANCIAL PROJECTIONS -->
+<div class="page pg-break">
+  <h1 class="sec">Financial Projections</h1>
+
+  <h2 class="sub">Planning Assumptions</h2>
+  <table>
+    <tbody>
+      <tr><td>Tuition rate</td><td>$750 per credit hour (in-state and online rate)</td></tr>
+      <tr><td>Total credits per student</td><td>33 hours</td></tr>
+      <tr><td>Revenue per student (full program)</td><td>$24,750</td></tr>
+      <tr><td>Faculty cost per section</td><td>$8,000–$12,000 (adjunct) / tenure-track salary prorated</td></tr>
+      <tr><td>Online platform</td><td>USC Blackboard (existing infrastructure; incremental cost approx. $15,000 per year)</td></tr>
+      <tr><td>Year 1 marketing budget</td><td>$120,000</td></tr>
+      <tr><td>Subsequent years marketing</td><td>$80,000 per year</td></tr>
+      <tr><td>Break-even enrollment threshold</td><td>28 active students</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sub">Five-Year Enrollment and Revenue Forecast</h2>
+  <table>
+    <thead><tr><th>Year</th><th>New Students</th><th>Total Active</th><th>Gross Revenue</th><th>Operating Cost</th><th>Net</th></tr></thead>
+    <tbody>
+      <tr><td>Year 1 (FY 2028)</td><td>25</td><td>25</td><td>$309,375</td><td>$485,000</td><td class="neg">–$175,625</td></tr>
+      <tr><td>Year 2 (FY 2029)</td><td>40</td><td>62</td><td>$766,125</td><td>$620,000</td><td class="pos">+$146,125</td></tr>
+      <tr><td>Year 3 (FY 2030)</td><td>60</td><td>110</td><td>$1,359,375</td><td>$780,000</td><td class="pos">+$579,375</td></tr>
+      <tr><td>Year 4 (FY 2031)</td><td>75</td><td>150</td><td>$1,856,250</td><td>$890,000</td><td class="pos">+$966,250</td></tr>
+      <tr><td>Year 5 (FY 2032)</td><td>90</td><td>185</td><td>$2,290,313</td><td>$950,000</td><td class="pos">+$1,340,313</td></tr>
+    </tbody>
+  </table>
+
+  <div class="chart-grid">
+    <div class="chart-wrap">
+      <div class="chart-title">Enrollment Growth by Year</div>
+      <canvas id="enrollChart"></canvas>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">Revenue vs. Operating Cost (Five-Year)</div>
+      <canvas id="finChart"></canvas>
+    </div>
+  </div>
+
+  <h2 class="sub">Start-Up Cost Summary</h2>
+  <table>
+    <thead><tr><th>Cost Category</th><th>Year 1</th><th>Year 2</th><th>Year 3 and Beyond</th></tr></thead>
+    <tbody>
+      <tr><td>Curriculum development (11 courses)</td><td>$165,000</td><td>$40,000</td><td>$20,000</td></tr>
+      <tr><td>Faculty (2 tenure-track lines + adjuncts)</td><td>$180,000</td><td>$190,000</td><td>$200,000</td></tr>
+      <tr><td>Technology and virtual lab environment</td><td>$60,000</td><td>$25,000</td><td>$15,000</td></tr>
+      <tr><td>Marketing and recruitment</td><td>$120,000</td><td>$80,000</td><td>$80,000</td></tr>
+      <tr><td>Accreditation and compliance</td><td>$35,000</td><td>$15,000</td><td>$10,000</td></tr>
+      <tr><td>Administrative support</td><td>$45,000</td><td>$50,000</td><td>$55,000</td></tr>
+      <tr><td><strong>Total</strong></td><td><strong>$605,000</strong></td><td><strong>$400,000</strong></td><td><strong>Approximately $380,000</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="pg-foot"><span>USC Upstate — MS in CyberSecurity Feasibility Study</span><span>Page 5</span></div>
+</div>
+
+<!-- PAGE 6: SWOT AND TIMELINE -->
+<div class="page pg-break">
+  <h1 class="sec">SWOT Analysis</h1>
+  <p>The following analysis reflects conditions as of June 2026 and draws on internal institutional data, SACSCOC requirements,<a href="#ref12" class="cit">[12]</a> and comparative review of peer program development experiences.</p>
+
+  <div class="swot">
+    <div class="swot-box sw-s">
+      <h3>Strengths</h3>
+      <ul>
+        <li>Established undergraduate CS and IT programs as natural feeder pipelines</li>
+        <li>USC system brand recognition throughout South Carolina</li>
+        <li>SACS-COC regional accreditation in good standing</li>
+        <li>Competitive tuition rate compared to private competitors</li>
+        <li>Geographic proximity to Fort Jackson and Midlands defense contractors</li>
+        <li>Existing Blackboard LMS reduces technology start-up cost</li>
+      </ul>
+    </div>
+    <div class="swot-box sw-w">
+      <h3>Weaknesses</h3>
+      <ul>
+        <li>No existing graduate CS enrollment base to draw on initially</li>
+        <li>Limited dedicated CyberSecurity faculty on current roster</li>
+        <li>No dedicated cyber range or research lab at present</li>
+        <li>Smaller national brand profile relative to Georgia Tech or Clemson</li>
+        <li>Significant Year 1 start-up investment required ($605,000)</li>
+      </ul>
+    </div>
+    <div class="swot-box sw-o">
+      <h3>Opportunities</h3>
+      <ul>
+        <li>No competing online public MS program in Upstate South Carolina</li>
+        <li>NSA Center of Academic Excellence in Cyber Defense designation available</li>
+        <li>Federal CHIPS Act and SC workforce development grant programs</li>
+        <li>Employer tuition benefit partnerships with Upstate manufacturers</li>
+        <li>Veterans and active-duty military enrollment via Fort Jackson pipeline</li>
+        <li>Greenville–Spartanburg technology corridor growth accelerating</li>
+      </ul>
+    </div>
+    <div class="swot-box sw-t">
+      <h3>Threats</h3>
+      <ul>
+        <li>Georgia Tech's $310 per credit program undercuts on price alone</li>
+        <li>WGU's flat-rate model appeals to highly cost-sensitive students</li>
+        <li>Industry salary competition makes CyberSecurity faculty hard to recruit</li>
+        <li>Rapid technological change requires ongoing curriculum revision investment</li>
+        <li>SACSCOC substantive change review adds 12–18 months to launch timeline</li>
+      </ul>
+    </div>
+  </div>
+
+  <h1 class="sec">Implementation Timeline</h1>
+
+  <div class="timeline">
+    <div class="tl">
+      <div class="tl-date">Q3 2026 — Approval Phase</div>
+      <div class="tl-name">Internal Governance and Feasibility Approval</div>
+      <div class="tl-desc">Present feasibility study to Faculty Senate and Academic Affairs Committee. Submit SACSCOC Substantive Change notification for new online graduate program.</div>
+    </div>
+    <div class="tl">
+      <div class="tl-date">Q4 2026 — Development Phase</div>
+      <div class="tl-name">Curriculum Development and Faculty Hiring</div>
+      <div class="tl-desc">Post and begin hiring two tenure-track faculty lines in CyberSecurity. Contract instructional designers for online course development. Complete 11 course shells.</div>
+    </div>
+    <div class="tl">
+      <div class="tl-date">Q1 2027 — Infrastructure Phase</div>
+      <div class="tl-name">Virtual Cyber Range and Advisory Board</div>
+      <div class="tl-desc">Deploy cloud-based lab environment (AWS GovCloud or Cyber.org range). Establish Industry Advisory Board with five to seven regional employer representatives.</div>
+    </div>
+    <div class="tl">
+      <div class="tl-date">Q2 2027 — Recruitment Phase</div>
+      <div class="tl-name">Marketing Launch and Application Review</div>
+      <div class="tl-desc">Launch digital recruitment campaign targeting SC working professionals. Open admissions portal. Begin employer partnership outreach for tuition benefit agreements.</div>
+    </div>
+    <div class="tl">
+      <div class="tl-date">Fall 2027 — Program Launch</div>
+      <div class="tl-name">First Cohort Begins</div>
+      <div class="tl-desc">Target 25 students in inaugural cohort. Submit NSA CAE-CD designation application. Begin tracking retention and satisfaction metrics.</div>
+    </div>
+    <div class="tl">
+      <div class="tl-date">FY 2028–2029 — Sustainability Phase</div>
+      <div class="tl-name">Scale Enrollment and Achieve Break-Even</div>
+      <div class="tl-desc">Program reaches financial sustainability at approximately 62 active students. Pursue formal CAE-CD designation. Explore second cohort concentration option.</div>
+    </div>
+  </div>
+
+  <div class="pg-foot"><span>USC Upstate — MS in CyberSecurity Feasibility Study</span><span>Page 6</span></div>
+</div>
+
+<!-- PAGE 7: RECOMMENDATIONS -->
+<div class="page pg-break">
+  <h1 class="sec">Recommendations and Next Steps</h1>
+
+  <div class="callout">
+    <p><strong>Overall Recommendation: Proceed with program development.</strong> The MS in CyberSecurity represents a high-confidence opportunity with documented market demand, manageable start-up costs relative to projected returns, and a clear path to financial sustainability by Year 2. The program aligns with USC Upstate's stated commitment to workforce-relevant graduate education and regional economic engagement.</p>
+  </div>
+
+  <h2 class="sub">Priority Actions</h2>
+  <table>
+    <thead><tr><th>Priority</th><th>Action</th><th>Owner</th><th>Target Date</th></tr></thead>
+    <tbody>
+      <tr><td class="pos">1 — Critical</td><td>Present feasibility study for Board of Trustees approval</td><td>Provost Office</td><td>Q3 2026</td></tr>
+      <tr><td class="pos">2 — Critical</td><td>File SACSCOC Substantive Change notification</td><td>Accreditation Officer</td><td>Q3 2026</td></tr>
+      <tr><td class="pos">3 — Critical</td><td>Secure start-up funding ($605,000 via grants and institutional reserves)</td><td>CFO and Development Office</td><td>Q3–Q4 2026</td></tr>
+      <tr><td class="pos">4 — Critical</td><td>Hire CyberSecurity Program Director</td><td>Dean, College of Science and Engineering Technology</td><td>Q4 2026</td></tr>
+      <tr><td>5 — High</td><td>Establish Industry Advisory Board with five to seven Upstate employer representatives</td><td>Program Director</td><td>Q4 2026</td></tr>
+      <tr><td>6 — High</td><td>Apply for NSA Center of Academic Excellence in Cyber Defense designation</td><td>Program Director</td><td>Q1 2027</td></tr>
+      <tr><td>7 — High</td><td>Launch digital recruitment campaign targeting SC working professionals</td><td>Marketing and Communications</td><td>Q2 2027</td></tr>
+      <tr><td>8 — Medium</td><td>Negotiate tuition benefit agreements with ten or more Upstate employers</td><td>Business Development</td><td>Q2 2027</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sub">Risk Mitigation Summary</h2>
+  <table>
+    <thead><tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation Strategy</th></tr></thead>
+    <tbody>
+      <tr><td>Below-target first-year enrollment</td><td>Medium</td><td>High</td><td>Establish guaranteed cohort with one or two employer partners before launch; adjust marketing spend if needed</td></tr>
+      <tr><td>Faculty recruitment difficulty</td><td>Medium</td><td>High</td><td>Start with qualified adjunct faculty; use industry practitioners for specialized courses; offer competitive salary</td></tr>
+      <tr><td>SACSCOC approval delay</td><td>Low</td><td>High</td><td>File substantive change early and engage accreditor in pre-consultation meeting before formal submission</td></tr>
+      <tr><td>Price competition from Georgia Tech</td><td>High</td><td>Medium</td><td>Differentiate on local employer relationships, personal advising, smaller cohorts, and regional network value</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sub">Closing Statement</h2>
+  <p>USC Upstate stands at an inflection point. The cybersecurity profession is growing faster than the educational system is producing graduates, and South Carolina's technology employers are already feeling the shortage. This program will not solve the national problem on its own, but it will meaningfully address a local one — and in doing so, it will generate sustainable revenue, strengthen the university's graduate profile, and create real career pathways for Upstate South Carolina residents.</p>
+  <p>The window for first-mover advantage in this region will not stay open indefinitely. Moving forward in 2026 is the right call.</p>
+
+  <div style="margin-top:3rem; text-align:center; color:var(--muted); font-size:.82rem; border-top:1px solid var(--border); padding-top:1.5rem;">
+    <div style="color:var(--garnet); font-family:'Merriweather',serif; font-size:1.1rem; font-weight:700; margin-bottom:.4rem;">University of South Carolina Upstate</div>
+    <div>800 University Way, Spartanburg, SC 29303</div>
+    <div>upstate.edu</div>
+    <div style="margin-top:.6rem;">Prepared by: Office of Academic Planning and Innovation — June 2026</div>
+    <div style="margin-top:.4rem; font-size:.75rem;">This document is intended for internal institutional planning. All enrollment and revenue projections are estimates based on available market data and peer program benchmarks.</div>
+  </div>
+
+  <div class="pg-foot"><span>USC Upstate — MS in CyberSecurity Feasibility Study</span><span>Page 7</span></div>
+</div>
+
+<!-- PAGE 8: REFERENCES -->
+<div class="page pg-break">
+  <h1 class="sec">References</h1>
+  <ol class="ref-list">
+    <li id="ref1">Cybersecurity Ventures. (2025). <em>Cybersecurity Jobs Report: 2025 Edition.</em> Cybercrime Magazine. Retrieved from <a href="https://cybersecurityventures.com/jobs" target="_blank">https://cybersecurityventures.com/jobs</a></li>
+    <li id="ref2">South Carolina Department of Commerce. (2025). <em>Upstate SC Regional Economic Profile.</em> Columbia, SC: SCDOC. Retrieved from <a href="https://sccommerce.com/research" target="_blank">https://sccommerce.com/research</a></li>
+    <li id="ref3">U.S. Bureau of Labor Statistics. (2024). <em>Occupational Outlook Handbook: Information Security Analysts.</em> Washington, DC: U.S. Department of Labor. Retrieved from <a href="https://www.bls.gov/ooh/computer-and-information-technology/information-security-analysts.htm" target="_blank">https://www.bls.gov/ooh/computer-and-information-technology/information-security-analysts.htm</a></li>
+    <li id="ref4">Cybersecurity Ventures. (2025). <em>3.5 Million Cybersecurity Job Openings Globally in 2025.</em> Sausalito, CA: Cybersecurity Ventures. Retrieved from <a href="https://cybersecurityventures.com/jobs" target="_blank">https://cybersecurityventures.com/jobs</a></li>
+    <li id="ref5">(ISC)². (2025). <em>2025 Cybersecurity Workforce Study.</em> Alexandria, VA: (ISC)². Retrieved from <a href="https://www.isc2.org/research/workforce-study" target="_blank">https://www.isc2.org/research/workforce-study</a></li>
+    <li id="ref6">South Carolina Technical College System. (2025). <em>Cybersecurity Workforce Demand Report: South Carolina 2020–2025.</em> Columbia, SC: SCTCS Office of Research and Planning.</li>
+    <li id="ref7">South Carolina Department of Employment and Workforce. (2026). <em>Q1 2026 Occupational Demand Survey.</em> Columbia, SC: SCDEW Labor Market Information. Retrieved from <a href="https://www.scdew.state.sc.us/labor-market" target="_blank">https://www.scdew.state.sc.us/labor-market</a></li>
+    <li id="ref8">University of South Carolina. (2026). <em>Graduate Certificate in Cybersecurity — Program Overview.</em> Columbia, SC: UofSC College of Engineering and Computing. Retrieved from <a href="https://sc.edu/study/colleges_schools/engineering_and_computing/index.php" target="_blank">https://sc.edu</a></li>
+    <li id="ref9">National Institute of Standards and Technology. (2024). <em>NICE Cybersecurity Workforce Framework (NIST SP 800-181r2).</em> Gaithersburg, MD: U.S. Department of Commerce. Retrieved from <a href="https://www.nist.gov/system/files/documents/2024/nice-framework.pdf" target="_blank">https://www.nist.gov/nice</a></li>
+    <li id="ref10">ACM / IEEE-CS Joint Task Force. (2023). <em>Cybersecurity Curricula 2023: Curriculum Guidelines for Post-Secondary Degree Programs in Cybersecurity.</em> New York: Association for Computing Machinery. Retrieved from <a href="https://csec2023.org" target="_blank">https://csec2023.org</a></li>
+    <li id="ref11">Global Knowledge. (2025). <em>IT Skills and Salary Report 2025.</em> Cary, NC: Global Knowledge Training. Retrieved from <a href="https://www.globalknowledge.com/us-en/resources/resource-library/articles/it-skills-and-salary-survey" target="_blank">https://www.globalknowledge.com</a></li>
+    <li id="ref12">Southern Association of Colleges and Schools Commission on Colleges. (2024). <em>SACSCOC Policy on Substantive Change.</em> Decatur, GA: SACSCOC. Retrieved from <a href="https://sacscoc.org/app/uploads/2024/substantive-change-policy.pdf" target="_blank">https://sacscoc.org</a></li>
+  </ol>
+
+  <div class="pg-foot"><span>USC Upstate — MS in CyberSecurity Feasibility Study</span><span>Page 8</span></div>
+</div>
+
+<!-- CHARTS -->
+<script>
+const g = '#73000a', gold = '#c5a858', bl = '#1b4f72', grn = '#2e7d32';
+
+new Chart(document.getElementById('jobChart'), {
+  type:'bar',
+  data:{
+    labels:['2020','2021','2022','2023','2024','2025','2026P','2027P','2028P'],
+    datasets:[{label:'Open Positions (000s)',data:[350,435,512,598,692,769,841,910,980],backgroundColor:g,borderRadius:4}]
+  },
+  options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v+'K'}}}}
+});
+
+new Chart(document.getElementById('salaryChart'), {
+  type:'bar',
+  data:{
+    labels:['Security Analyst','Penetration Tester','CISO','Cloud Security Eng.','Forensic Analyst','GRC Manager'],
+    datasets:[{label:'Median Salary',data:[102000,115000,195000,135000,98000,118000],backgroundColor:[g,bl,gold,'#c0392b','#2980b9','#8e44ad'],borderRadius:4}]
+  },
+  options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>'$'+v.toLocaleString()}}}}
+});
+
+new Chart(document.getElementById('mixChart'), {
+  type:'doughnut',
+  data:{
+    labels:['IT Professionals Upskilling','Career Changers (STEM Background)','Recent Undergraduates','Military and DoD','International Students'],
+    datasets:[{data:[38,22,18,14,8],backgroundColor:[g,bl,gold,grn,'#555']}]
+  },
+  options:{plugins:{legend:{position:'right'}}}
+});
+
+new Chart(document.getElementById('posChart'), {
+  type:'bubble',
+  data:{
+    datasets:[
+      {label:'Georgia Tech',data:[{x:2,y:9,r:22}],backgroundColor:'#c0392b88'},
+      {label:'SANS Technology',data:[{x:9,y:7,r:10}],backgroundColor:'#8e44ad88'},
+      {label:'WGU',data:[{x:2,y:3.5,r:20}],backgroundColor:'#f39c1288'},
+      {label:'UNC Charlotte',data:[{x:6,y:5.5,r:14}],backgroundColor:'#2980b988'},
+      {label:'USC Upstate',data:[{x:5.5,y:6.5,r:13}],backgroundColor:g+'cc'},
+    ]
+  },
+  options:{
+    scales:{
+      x:{title:{display:true,text:'Price Level (1 = lowest cost)'},min:0,max:11},
+      y:{title:{display:true,text:'Regional Relevance and Research Focus'},min:2,max:11}
+    }
+  }
+});
+
+new Chart(document.getElementById('enrollChart'), {
+  type:'line',
+  data:{
+    labels:['Year 1','Year 2','Year 3','Year 4','Year 5'],
+    datasets:[
+      {label:'Total Active Students',data:[25,62,110,150,185],borderColor:g,backgroundColor:g+'22',fill:true,tension:.4},
+      {label:'Break-Even (28 students)',data:[28,28,28,28,28],borderColor:'#aaa',borderDash:[5,4],tension:0,pointRadius:0}
+    ]
+  },
+  options:{plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true}}}
+});
+
+new Chart(document.getElementById('finChart'), {
+  type:'bar',
+  data:{
+    labels:['Year 1','Year 2','Year 3','Year 4','Year 5'],
+    datasets:[
+      {label:'Revenue ($000s)',data:[309,766,1359,1856,2290],backgroundColor:grn+'bb',borderRadius:4},
+      {label:'Operating Cost ($000s)',data:[485,620,780,890,950],backgroundColor:g+'bb',borderRadius:4}
+    ]
+  },
+  options:{plugins:{legend:{position:'bottom'}},scales:{y:{ticks:{callback:v=>'$'+v+'K'}}}}
+});
+</script>
+</body>
+</html>

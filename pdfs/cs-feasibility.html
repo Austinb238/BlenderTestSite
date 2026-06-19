@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Feasibility Study — MS in Computer Science | USC Upstate</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Source+Sans+3:wght@400;600;700&display=swap');
+  :root {
+    --garnet: #73000a;
+    --gold: #c5a858;
+    --accent: #1b4f72;
+    --teal: #0e6655;
+    --light: #f9f7f4;
+    --border: #ddd;
+    --text: #1e1e1e;
+    --muted: #666;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Source Sans 3',sans-serif; color:var(--text); background:#fff; font-size:11.5pt; line-height:1.7; }
+
+  .cover {
+    background:var(--accent); color:#fff;
+    min-height:100vh; display:flex; flex-direction:column;
+    justify-content:center; align-items:center; text-align:center;
+    padding:4rem 3rem; page-break-after:always;
+  }
+  .cover-icon { font-size:5rem; margin-bottom:1.5rem; }
+  .cover-label { font-size:.8rem; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.65); }
+  .gold-bar { width:70px; height:4px; background:var(--gold); margin:1.2rem auto; }
+  .cover-title { font-family:'Merriweather',serif; font-size:2.7rem; font-weight:700; line-height:1.18; max-width:20ch; margin:.5rem 0 1.2rem; }
+  .cover-sub { font-size:1.05rem; color:rgba(255,255,255,.78); max-width:44ch; margin-bottom:3rem; }
+  .cover-meta { border-top:1px solid rgba(255,255,255,.25); padding-top:2rem; display:flex; gap:3.5rem; justify-content:center; flex-wrap:wrap; }
+  .cover-meta div { display:flex; flex-direction:column; gap:.25rem; }
+  .cover-meta .lbl { font-size:.72rem; text-transform:uppercase; letter-spacing:.14em; color:rgba(255,255,255,.55); }
+  .cover-meta .val { font-size:.95rem; font-weight:600; }
+
+  .page { max-width:870px; margin:0 auto; padding:3.5rem 3rem; }
+  .pg-break { page-break-before:always; }
+
+  h1.sec { font-family:'Merriweather',serif; font-size:1.55rem; color:var(--accent); border-bottom:3px solid var(--accent); padding-bottom:.45rem; margin:2.5rem 0 1.6rem; }
+  h1.sec:first-child { margin-top:0; }
+  h2.sub { font-size:1.08rem; font-weight:700; color:var(--garnet); margin:1.6rem 0 .6rem; }
+  p { margin-bottom:.9rem; }
+  p:last-child { margin-bottom:0; }
+
+  .callout { background:var(--light); border-left:4px solid var(--accent); padding:1.1rem 1.4rem; border-radius:0 6px 6px 0; margin:1.4rem 0; }
+  .callout p { margin:0; }
+
+  .kpi-row { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin:1.6rem 0; }
+  .kpi { background:var(--accent); color:#fff; border-radius:8px; padding:1.2rem .8rem; text-align:center; }
+  .kpi .num { font-family:'Merriweather',serif; font-size:1.9rem; font-weight:700; line-height:1.1; }
+  .kpi .lbl { font-size:.7rem; text-transform:uppercase; letter-spacing:.1em; color:rgba(255,255,255,.75); margin-top:.35rem; }
+
+  table { width:100%; border-collapse:collapse; margin:1.1rem 0; font-size:.9rem; }
+  th { background:var(--accent); color:#fff; padding:.6rem .85rem; text-align:left; font-weight:600; font-size:.88rem; }
+  td { padding:.52rem .85rem; border-bottom:1px solid var(--border); vertical-align:top; }
+  tr:nth-child(even) td { background:#f4f8fc; }
+  tr:last-child td { border-bottom:none; }
+  .pos { color:#1a6b3c; font-weight:700; }
+  .neg { color:#8b0000; font-weight:700; }
+  .hl { color:var(--accent); font-weight:700; }
+
+  .chart-wrap { background:var(--light); border-radius:8px; padding:1.4rem; margin:1.4rem 0; }
+  .chart-wrap .chart-title { font-size:.8rem; text-transform:uppercase; letter-spacing:.12em; color:var(--muted); margin-bottom:.9rem; font-weight:600; }
+  .chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.4rem; }
+  canvas { max-height:270px; }
+
+  .swot { display:grid; grid-template-columns:1fr 1fr; gap:.9rem; margin:1.4rem 0; }
+  .swot-box { border-radius:8px; padding:1.1rem 1.3rem; }
+  .swot-box h3 { font-size:.78rem; text-transform:uppercase; letter-spacing:.14em; margin-bottom:.7rem; font-weight:700; }
+  .swot-box ul { padding-left:1.1rem; font-size:.87rem; }
+  .swot-box li { margin-bottom:.35rem; }
+  .sw-s { background:#e8f5e9; } .sw-s h3 { color:#1b5e20; }
+  .sw-w { background:#fff3e0; } .sw-w h3 { color:#bf360c; }
+  .sw-o { background:#e3f2fd; } .sw-o h3 { color:#0d47a1; }
+  .sw-t { background:#fce4ec; } .sw-t h3 { color:#880e4f; }
+
+  .timeline { border-left:3px solid var(--accent); margin:1.4rem 0 1.4rem 1rem; padding-left:1.6rem; }
+  .tl { position:relative; margin-bottom:1.4rem; }
+  .tl::before { content:''; position:absolute; left:-2.2rem; top:.35rem; width:11px; height:11px; background:var(--accent); border-radius:50%; }
+  .tl-date { font-size:.73rem; text-transform:uppercase; letter-spacing:.15em; color:var(--accent); font-weight:700; }
+  .tl-name { font-weight:700; margin:.15rem 0 .1rem; }
+  .tl-desc { font-size:.87rem; color:var(--muted); }
+
+  a.cit { color:var(--accent); text-decoration:none; font-size:.85em; vertical-align:super; font-weight:600; }
+  a.cit:hover { text-decoration:underline; }
+
+  .ref-list { font-size:.85rem; }
+  .ref-list li { margin-bottom:.75rem; padding-left:.3rem; }
+  .ref-list a { color:var(--accent); word-break:break-all; }
+
+  .pg-foot { margin-top:3rem; padding-top:.9rem; border-top:2px solid var(--border); display:flex; justify-content:space-between; font-size:.77rem; color:var(--muted); }
+
+  @media print {
+    .cover { min-height:100vh; }
+    .pg-break { page-break-before:always; }
+    canvas { max-height:230px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-icon">💻</div>
+  <div class="cover-label">University of South Carolina Upstate</div>
+  <div class="gold-bar"></div>
+  <div class="cover-title">Master of Science in Computer Science</div>
+  <div class="cover-sub">Program Feasibility Study and Market Analysis for a Proposed Online Graduate Degree</div>
+  <div class="cover-meta">
+    <div><span class="lbl">Prepared For</span><span class="val">USC Upstate Academic Affairs</span></div>
+    <div><span class="lbl">Program Format</span><span class="val">Online / Hybrid</span></div>
+    <div><span class="lbl">Report Date</span><span class="val">June 2026</span></div>
+    <div><span class="lbl">Proposed Launch</span><span class="val">Fall 2027</span></div>
+  </div>
+</div>
+
+<!-- PAGE 1: EXECUTIVE SUMMARY -->
+<div class="page">
+  <h1 class="sec">Executive Summary</h1>
+
+  <p>This feasibility study examines the case for USC Upstate to offer a fully online Master of Science in Computer Science (MSCS). The analysis covers national and regional labor market conditions, a review of comparable graduate programs, a proposed curriculum structure, five-year financial projections, institutional risks, and a recommended implementation path.</p>
+
+  <p>Computer Science graduate education is among the highest-demand segments in American higher education. The Bureau of Labor Statistics projects that software developer, quality assurance analyst, and related computing occupations will grow 25 percent through 2032.<a href="#ref1" class="cit">[1]</a> That growth is not evenly distributed: roles in artificial intelligence, machine learning, cloud computing, and data engineering are growing at rates two to three times the broader category average.<a href="#ref2" class="cit">[2]</a> South Carolina's expanding technology sector is feeling that pressure directly, and the region around Spartanburg and Greenville has limited graduate CS education options for working professionals.</p>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="num">25%</div><div class="lbl">10-year job growth for CS roles (BLS)</div></div>
+    <div class="kpi"><div class="num">$132K</div><div class="lbl">Median MS Computer Science salary</div></div>
+    <div class="kpi"><div class="num">4.2M</div><div class="lbl">Computing job openings projected by 2030</div></div>
+    <div class="kpi"><div class="num">$2.6M</div><div class="lbl">Projected cumulative net revenue (Yr 1–5)</div></div>
+  </div>
+
+  <div class="callout">
+    <p><strong>Recommendation: Proceed.</strong> A USC Upstate MS in Computer Science is financially viable, educationally sound, and regionally needed. The program can reach break-even with 30 active students and is modeled to produce positive net revenue by Year 2. Timing matters — the Upstate tech corridor is growing rapidly, and early program establishment will be substantially harder to replicate once a competitor enters the space.</p>
+  </div>
+
+  <h2 class="sub">Scope of This Study</h2>
+  <p>The analysis draws on national labor market data from the Bureau of Labor Statistics, Computing Research Association workforce reports, South Carolina labor market statistics, a competitive review of online CS graduate programs at comparable institutions, and internal cost modeling based on USC Upstate's current operational infrastructure and faculty profile. All enrollment and revenue figures represent planning estimates and should be reviewed annually against actual performance.</p>
+
+  <div class="pg-foot"><span>USC Upstate — MS in Computer Science Feasibility Study</span><span>Page 1</span></div>
+</div>
+
+<!-- PAGE 2: MARKET ANALYSIS -->
+<div class="page pg-break">
+  <h1 class="sec">Market Analysis</h1>
+
+  <h2 class="sub">National Computing Workforce Demand</h2>
+  <p>Computing is one of the fastest-growing occupational categories in the United States, and graduate-level credentials are increasingly required for senior individual contributor and leadership roles. The Computing Research Association's 2025 Taulbee Survey found that the number of CS PhD graduates remained flat while industry demand for advanced degree holders continued to rise — a supply-demand gap that is now translating into strong demand for professionally oriented master's programs.<a href="#ref3" class="cit">[3]</a></p>
+
+  <p>Areas of particular growth include machine learning and AI engineering, cloud infrastructure and DevOps, full-stack software development, data science and analytics engineering, and distributed systems. These are not niche specializations anymore — they are mainstream requirements across manufacturing, healthcare, finance, and logistics.<a href="#ref4" class="cit">[4]</a></p>
+
+  <div class="chart-grid">
+    <div class="chart-wrap">
+      <div class="chart-title">U.S. Computing Job Openings — 2020 to 2028 (Thousands, Projected)</div>
+      <canvas id="jobChart"></canvas>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">Median Salaries by Computer Science Specialization</div>
+      <canvas id="salaryChart"></canvas>
+    </div>
+  </div>
+
+  <h2 class="sub">South Carolina and Upstate Regional Demand</h2>
+  <p>South Carolina added more than 12,000 technology sector jobs between 2020 and 2025, a 31 percent increase that outpaced the national average.<a href="#ref5" class="cit">[5]</a> The Upstate region accounts for a disproportionate share of that growth, driven by the presence of international manufacturers who have built sophisticated software and data operations alongside their physical plants — BMW, Michelin, Milliken, and others now employ substantial in-house software development and data analytics teams locally.</p>
+
+  <p>South Carolina's Department of Employment and Workforce recorded 2,214 active computing and software job postings in Q1 2026, with the largest clusters in Greenville, Spartanburg, and the I-85 corridor. Average advertised salaries for roles requiring a master's degree were $138,200 — roughly $22,000 higher than the same roles open to bachelor's-degree applicants.<a href="#ref6" class="cit">[6]</a></p>
+
+  <table>
+    <thead><tr><th>Sector</th><th>Active CS Openings (Q1 2026)</th><th>Year-over-Year Change</th><th>Avg. Salary (MS Required)</th></tr></thead>
+    <tbody>
+      <tr><td>Software and Technology</td><td>618</td><td class="pos">+24%</td><td>$138,400</td></tr>
+      <tr><td>Manufacturing and Advanced Mfg.</td><td>487</td><td class="pos">+31%</td><td>$128,700</td></tr>
+      <tr><td>Healthcare and Life Sciences</td><td>392</td><td class="pos">+28%</td><td>$134,500</td></tr>
+      <tr><td>Financial Services and FinTech</td><td>341</td><td class="pos">+18%</td><td>$148,200</td></tr>
+      <tr><td>Logistics and Supply Chain</td><td>218</td><td class="pos">+36%</td><td>$118,900</td></tr>
+      <tr><td>Government and Defense</td><td>158</td><td class="pos">+21%</td><td>$125,000</td></tr>
+      <tr><td><strong>Total</strong></td><td><strong>2,214</strong></td><td class="pos"><strong>+27%</strong></td><td><strong>$132,300 avg.</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sub">Graduate CS Enrollment Trends</h2>
+  <p>Online master's programs in Computer Science have shown consistent enrollment growth over the past decade. The National Center for Education Statistics reported a 42 percent increase in graduate CS enrollment between 2015 and 2024, with online programs accounting for the majority of that growth since 2020.<a href="#ref7" class="cit">[7]</a> That trend reflects both the proven quality of online delivery for technical subjects and the strong preference of working professionals for flexible scheduling.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Graduate CS Enrollment Growth — National Online Programs (Index, 2015 = 100)</div>
+    <canvas id="enrollTrendChart" style="max-height:210px;"></canvas>
+  </div>
+
+  <div class="pg-foot"><span>USC Upstate — MS in Computer Science Feasibility Study</span><span>Page 2</span></div>
+</div>
+
+<!-- PAGE 3: COMPETITIVE LANDSCAPE -->
+<div class="page pg-break">
+  <h1 class="sec">Competitive Landscape</h1>
+
+  <p>The national online MSCS market is anchored by a small number of very large, very well-known programs. However, the regional picture — specifically for South Carolina working professionals who want a university name they recognize and a price point that makes sense for a self-funded or employer-sponsored student — is considerably more open than the national view suggests.</p>
+
+  <table>
+    <thead><tr><th>Institution</th><th>Program</th><th>Format</th><th>Credits</th><th>Tuition / Credit</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Georgia Tech (OMSCS)</td><td>MS Computer Science</td><td>Online</td><td>30</td><td>$182</td><td>Dominant brand; exceptionally low price; very high volume (10,000+ enrolled)</td></tr>
+      <tr><td>University of Illinois</td><td>MS Computer Science (iMCS)</td><td>Online</td><td>32</td><td>$636</td><td>Strong brand; Coursera partnership; primarily asynchronous</td></tr>
+      <tr><td>Clemson University</td><td>MS Computer Science</td><td>In-person only</td><td>30</td><td>$642 (in-state)</td><td>No online option; requires campus presence — significant barrier for working adults</td></tr>
+      <tr><td>UNC Charlotte</td><td>MS Computer Science</td><td>Hybrid</td><td>30</td><td>$688</td><td>North Carolina market; minimal Upstate SC brand relevance</td></tr>
+      <tr><td>Purdue Global</td><td>MS Information Technology</td><td>Online</td><td>36</td><td>$720</td><td>For-profit; broad but not CS-specific depth</td></tr>
+      <tr><td>Winthrop University</td><td>No MS CS</td><td>—</td><td>—</td><td>—</td><td class="pos">Direct regional peer with no competing offering</td></tr>
+      <tr><td><strong>USC Upstate (Proposed)</strong></td><td><strong>MS Computer Science</strong></td><td><strong>Online</strong></td><td><strong>33</strong></td><td><strong>$725</strong></td><td class="hl"><strong>Only public online MSCS in Upstate SC</strong></td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sub">The Georgia Tech Question</h2>
+  <p>The OMSCS program at Georgia Tech — with more than 10,000 enrolled students and a tuition rate of $182 per credit — is the elephant in the room for every institution considering an online MSCS.<a href="#ref8" class="cit">[8]</a> It is genuinely excellent and genuinely inexpensive. However, the OMSCS experience is designed for a specific type of student: highly self-directed, comfortable with a largely asynchronous format, willing to wait in queues for popular courses, and unconcerned with personal advising or regional employer connections.</p>
+
+  <p>USC Upstate's comparative advantage lies precisely in the areas where OMSCS is structurally thin: smaller cohorts, personal faculty relationships, dedicated career advising, integration with Upstate SC employer networks, and a degree from an institution that local hiring managers know and trust. These are not small differences for the working professional market.</p>
+
+  <div class="chart-wrap">
+    <div class="chart-title">Positioning Map — Program Size vs. Regional Employer Integration</div>
+    <canvas id="posChart"></canvas>
+  </div>
+
+  <div class="pg-foot"><span>USC Upstate — MS in Computer Science Feasibility Study</span><span>Page 3</span></div>
+</div>
+
+<!-- PAGE 4: PROGRAM STRUCTURE -->
+<div class="page pg-break">
+  <h1 class="sec">Proposed Program Structure</h1>
+
+  <h2 class="sub">Program Overview</h2>
+  <table>
+    <tbody>
+      <tr><td><strong>Degree</strong></td><td>Master of Science in Computer Science (MSCS)</td></tr>
+      <tr><td><strong>Total Credit Hours</strong></td><td>33 (11 courses at 3 credits each)</td></tr>
+      <tr><td><strong>Delivery Format</strong></td><td>Fully online; optional on-campus intensive sessions each semester</td></tr>
+      <tr><td><strong>Expected Duration</strong></td><td>18–24 months full-time; up to 36 months part-time</td></tr>
+      <tr><td><strong>Admission Requirements</strong></td><td>Bachelor's degree in Computer Science, Mathematics, or related STEM field; minimum 3.0 GPA; statement of purpose; programming proficiency demonstrated by transcript or assessment</td></tr>
+      <tr><td><strong>Concentrations</strong></td><td>Artificial Intelligence and Machine Learning; Software Engineering and Cloud Systems; Data Science and Analytics</td></tr>
+      <tr><td><strong>Thesis Option</strong></td><td>Available for students intending doctoral study; replaces two electives and capstone with six-credit thesis</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sub">Curriculum</h2>
+  <p>The proposed curriculum reflects ACM Computing Curricula 2023 guidelines for graduate CS programs<a href="#ref9" class="cit">[9]</a> and is designed to serve three audiences simultaneously: working professionals seeking advancement in their current technical track, career changers from adjacent STEM fields, and students considering doctoral study. The core establishes theoretical and systems foundations; the electives allow meaningful specialization within one concentration area.</p>
+
+  <table>
+    <thead><tr><th>Course Number</th><th>Course Title</th><th>Credits</th><th>Type</th></tr></thead>
+    <tbody>
+      <tr><td>CSCI 700</td><td>Analysis of Algorithms</td><td>3</td><td>Core</td></tr>
+      <tr><td>CSCI 710</td><td>Advanced Software Engineering</td><td>3</td><td>Core</td></tr>
+      <tr><td>CSCI 720</td><td>Machine Learning and Statistical Modeling</td><td>3</td><td>Core</td></tr>
+      <tr><td>CSCI 730</td><td>Distributed Systems and Cloud Computing</td><td>3</td><td>Core</td></tr>
+      <tr><td>CSCI 740</td><td>Database Systems and Data Engineering</td><td>3</td><td>Core</td></tr>
+      <tr><td>CSCI 750</td><td>Artificial Intelligence and Reasoning</td><td>3</td><td>Core</td></tr>
+      <tr><td>CSCI 760</td><td>Human-Computer Interaction and UX</td><td>3</td><td>Core</td></tr>
+      <tr><td>CSCI 770</td><td>Deep Learning and Neural Networks</td><td>3</td><td>Elective</td></tr>
+      <tr><td>CSCI 780</td><td>Natural Language Processing</td><td>3</td><td>Elective</td></tr>
+      <tr><td>CSCI 790</td><td>DevOps, MLOps, and Platform Engineering</td><td>3</td><td>Elective</td></tr>
+      <tr><td>CSCI 799</td><td>Capstone Project or Thesis</td><td>3</td><td>Capstone</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sub">Industry and Certification Alignment</h2>
+  <p>Graduate technology credentials command strong premiums in the job market, and coursework in this program prepares students for widely recognized vendor certifications that further increase their market value.<a href="#ref10" class="cit">[10]</a></p>
+
+  <table>
+    <thead><tr><th>Certification</th><th>Issuing Organization</th><th>Aligned Courses</th><th>Avg. Salary Premium</th></tr></thead>
+    <tbody>
+      <tr><td>AWS Solutions Architect — Professional</td><td>Amazon Web Services</td><td>CSCI 730, 790</td><td>+$18,000</td></tr>
+      <tr><td>Google Professional Machine Learning Engineer</td><td>Google Cloud</td><td>CSCI 720, 770</td><td>+$22,000</td></tr>
+      <tr><td>Microsoft Azure AI Engineer Associate</td><td>Microsoft</td><td>CSCI 750, 780</td><td>+$17,000</td></tr>
+      <tr><td>Databricks Certified Data Engineer</td><td>Databricks</td><td>CSCI 740</td><td>+$15,000</td></tr>
+      <tr><td>PMI Agile Certified Practitioner (PMI-ACP)</td><td>PMI</td><td>CSCI 710</td><td>+$11,000</td></tr>
+    </tbody>
+  </table>
+
+  <div class="pg-foot"><span>USC Upstate — MS in Computer Science Feasibility Study</span><span>Page 4</span></div>
+</div>
+
+<!-- PAGE 5: FINANCIAL PROJECTIONS -->
+<div class="page pg-break">
+  <h1 class="sec">Financial Projections</h1>
+
+  <h2 class="sub">Planning Assumptions</h2>
+  <table>
+    <tbody>
+      <tr><td>Tuition rate</td><td>$725 per credit hour (online rate, in-state and out-of-state)</td></tr>
+      <tr><td>Total credits per student</td><td>33 hours</td></tr>
+      <tr><td>Revenue per student (full program)</td><td>$23,925</td></tr>
+      <tr><td>Faculty cost per course section</td><td>$9,000–$13,000 (adjunct); tenure-track salary prorated by load</td></tr>
+      <tr><td>Online platform</td><td>USC Blackboard (existing infrastructure; incremental cost approximately $15,000 per year)</td></tr>
+      <tr><td>Year 1 marketing budget</td><td>$130,000</td></tr>
+      <tr><td>Subsequent years marketing</td><td>$85,000 per year</td></tr>
+      <tr><td>Break-even enrollment threshold</td><td>30 active students</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sub">Five-Year Enrollment and Revenue Forecast</h2>
+  <p>The projection below assumes a conservative Year 1 cohort of 28 students, growing to 190 active students by Year 5. Peer program data from comparable regional online MSCS launches support these assumptions as achievable without exceptional marketing spend.<a href="#ref11" class="cit">[11]</a></p>
+
+  <table>
+    <thead><tr><th>Year</th><th>New Students</th><th>Total Active</th><th>Gross Revenue</th><th>Operating Cost</th><th>Net</th></tr></thead>
+    <tbody>
+      <tr><td>Year 1 (FY 2028)</td><td>28</td><td>28</td><td>$335,950</td><td>$520,000</td><td class="neg">–$184,050</td></tr>
+      <tr><td>Year 2 (FY 2029)</td><td>45</td><td>70</td><td>$839,750</td><td>$640,000</td><td class="pos">+$199,750</td></tr>
+      <tr><td>Year 3 (FY 2030)</td><td>65</td><td>120</td><td>$1,439,100</td><td>$800,000</td><td class="pos">+$639,100</td></tr>
+      <tr><td>Year 4 (FY 2031)</td><td>80</td><td>160</td><td>$1,919,000</td><td>$910,000</td><td class="pos">+$1,009,000</td></tr>
+      <tr><td>Year 5 (FY 2032)</td><td>95</td><td>190</td><td>$2,278,000</td><td>$975,000</td><td class="pos">+$1,303,000</td></tr>
+    </tbody>
+  </table>
+
+  <div class="chart-grid">
+    <div class="chart-wrap">
+      <div class="chart-title">Enrollment Growth by Year</div>
+      <canvas id="enrollChart"></canvas>
+    </div>
+    <div class="chart-wrap">
+      <div class="chart-title">Revenue vs. Operating Cost (Five-Year)</div>
+      <canvas id="finChart"></canvas>
+    </div>
+  </div>
+
+  <h2 class="sub">Start-Up Cost Summary</h2>
+  <table>
+    <thead><tr><th>Cost Category</th><th>Year 1</th><th>Year 2</th><th>Year 3 and Beyond</th></tr></thead>
+    <tbody>
+      <tr><td>Curriculum development (11 courses)</td><td>$160,000</td><td>$35,000</td><td>$20,000</td></tr>
+      <tr><td>Faculty (2 tenure-track lines + adjuncts)</td><td>$185,000</td><td>$195,000</td><td>$210,000</td></tr>
+      <tr><td>Technology and cloud lab environment</td><td>$55,000</td><td>$22,000</td><td>$15,000</td></tr>
+      <tr><td>Marketing and student recruitment</td><td>$130,000</td><td>$85,000</td><td>$85,000</td></tr>
+      <tr><td>Accreditation and ABET consultation</td><td>$40,000</td><td>$18,000</td><td>$10,000</td></tr>
+      <tr><td>Administrative support staffing</td><td>$45,000</td><td>$50,000</td><td>$55,000</td></tr>
+      <tr><td><strong>Total</strong></td><td><strong>$615,000</strong></td><td><strong>$405,000</strong></td><td><strong>Approximately $395,000</strong></td></tr>
+    </tbody>
+  </table>
+
+  <div class="pg-foot"><span>USC Upstate — MS in Computer Science Feasibility Study</span><span>Page 5</span></div>
+</div>
+
+<!-- PAGE 6: SWOT AND TIMELINE -->
+<div class="page pg-break">
+  <h1 class="sec">SWOT Analysis</h1>
+
+  <p>This analysis reflects institutional conditions as of June 2026 and draws on internal program data, peer institution benchmarks, and SACSCOC substantive change requirements.<a href="#ref12" class="cit">[12]</a></p>
+
+  <div class="swot">
+    <div class="swot-box sw-s">
+      <h3>Strengths</h3>
+      <ul>
+        <li>Active BS in Computer Science program provides an established faculty base and curricular infrastructure</li>
+        <li>USC system institutional credibility recognized by South Carolina employers</li>
+        <li>SACS-COC regional accreditation in good standing</li>
+        <li>Online tuition rate competitive against all regional alternatives except Georgia Tech</li>
+        <li>Existing Blackboard LMS and IT infrastructure reduce platform start-up cost</li>
+        <li>Growing undergraduate CS enrollment increases graduate feeder pool over time</li>
+      </ul>
+    </div>
+    <div class="swot-box sw-w">
+      <h3>Weaknesses</h3>
+      <ul>
+        <li>No current graduate CS program — building from zero enrollment base</li>
+        <li>Faculty research profile in high-demand areas (ML, AI) still developing</li>
+        <li>No dedicated graduate computing research lab or funded research grants at present</li>
+        <li>National brand awareness lower than Georgia Tech, Clemson, or UofSC Columbia</li>
+        <li>Start-up investment of $615,000 in Year 1 requires advance funding commitment</li>
+      </ul>
+    </div>
+    <div class="swot-box sw-o">
+      <h3>Opportunities</h3>
+      <ul>
+        <li>No competing public online MSCS in Upstate South Carolina</li>
+        <li>Clemson's in-person-only format leaves Upstate working professionals underserved</li>
+        <li>NSF CISE Research Initiation Initiative grants available for new CS faculty</li>
+        <li>Employer tuition benefit pipeline through BMW, Michelin, and Milliken</li>
+        <li>Greenville–Spartanburg tech corridor growth projected to continue through 2030</li>
+        <li>State GEAR UP and LIFE scholarship extensions to graduate level under discussion</li>
+      </ul>
+    </div>
+    <div class="swot-box sw-t">
+      <h3>Threats</h3>
+      <ul>
+        <li>Georgia Tech OMSCS at $182 per credit is structurally difficult to match on price</li>
+        <li>University of Illinois iMCS leverages Coursera's massive marketing reach</li>
+        <li>Faculty recruitment is extremely competitive given industry salary levels for CS</li>
+        <li>AI-driven changes in software development may reshape required skills faster than curricula can adapt</li>
+        <li>SACSCOC substantive change review process adds 12–18 months minimum to launch</li>
+      </ul>
+    </div>
+  </div>
+
+  <h1 class="sec">Implementation Timeline</h1>
+
+  <div class="timeline">
+    <div class="tl">
+      <div class="tl-date">Q3 2026 — Approval Phase</div>
+      <div class="tl-name">Governance Approval and SACSCOC Notification</div>
+      <div class="tl-desc">Present feasibility study to Faculty Senate and Academic Affairs. Submit SACSCOC Substantive Change notification for new online graduate program. Begin faculty search planning.</div>
+    </div>
+    <div class="tl">
+      <div class="tl-date">Q4 2026 — Development Phase</div>
+      <div class="tl-name">Curriculum Build-Out and Faculty Hiring</div>
+      <div class="tl-desc">Post two tenure-track faculty searches in AI/ML and Software Engineering. Contract instructional designers. Develop 11 course shells in Blackboard. Finalize concentration structure.</div>
+    </div>
+    <div class="tl">
+      <div class="tl-date">Q1 2027 — Infrastructure Phase</div>
+      <div class="tl-name">Cloud Lab Environment and Industry Advisory Board</div>
+      <div class="tl-desc">Launch cloud-based computing lab (AWS Educate or Azure for Academia). Form Industry Advisory Board with Upstate SC technology employer representatives. Apply for NSF CISE RII grant.</div>
+    </div>
+    <div class="tl">
+      <div class="tl-date">Q2 2027 — Recruitment Phase</div>
+      <div class="tl-name">Marketing Campaign and Application Review</div>
+      <div class="tl-desc">Launch targeted digital campaign for Upstate SC working professionals. Open admissions. Activate employer tuition partnership outreach with top 10 regional technology employers.</div>
+    </div>
+    <div class="tl">
+      <div class="tl-date">Fall 2027 — Program Launch</div>
+      <div class="tl-name">First Cohort Begins</div>
+      <div class="tl-desc">Target 28 students in inaugural cohort. Begin tracking retention, satisfaction, and time-to-completion metrics. Initiate ABET program evaluation consultation.</div>
+    </div>
+    <div class="tl">
+      <div class="tl-date">FY 2028–2029 — Sustainability Phase</div>
+      <div class="tl-name">Scale Enrollment and Achieve Program Self-Sufficiency</div>
+      <div class="tl-desc">Program reaches financial sustainability at approximately 70 active students. Pursue ABET accreditation. Explore thesis track expansion and research grant applications.</div>
+    </div>
+  </div>
+
+  <div class="pg-foot"><span>USC Upstate — MS in Computer Science Feasibility Study</span><span>Page 6</span></div>
+</div>
+
+<!-- PAGE 7: RECOMMENDATIONS -->
+<div class="page pg-break">
+  <h1 class="sec">Recommendations and Next Steps</h1>
+
+  <div class="callout">
+    <p><strong>Overall Recommendation: Proceed with program development.</strong> The MSCS program addresses a genuine and growing regional workforce need, aligns with institutional strategic goals for graduate program expansion, and presents a financially sustainable path that recovers start-up costs within two years of launch. The competitive window for first-mover advantage in the Upstate SC online graduate CS market is open now and will close as the region's technology sector growth attracts competitor attention.</p>
+  </div>
+
+  <h2 class="sub">Priority Actions</h2>
+  <table>
+    <thead><tr><th>Priority</th><th>Action</th><th>Owner</th><th>Target Date</th></tr></thead>
+    <tbody>
+      <tr><td class="pos">1 — Critical</td><td>Secure Board of Trustees approval for program development</td><td>Provost Office</td><td>Q3 2026</td></tr>
+      <tr><td class="pos">2 — Critical</td><td>File SACSCOC Substantive Change notification for new online graduate program</td><td>Accreditation Officer</td><td>Q3 2026</td></tr>
+      <tr><td class="pos">3 — Critical</td><td>Commit start-up funding ($615,000 Year 1) from grants and institutional reserves</td><td>CFO and Development Office</td><td>Q3–Q4 2026</td></tr>
+      <tr><td class="pos">4 — Critical</td><td>Hire MSCS Program Director and initiate two faculty searches</td><td>Dean, College of Science and Engineering Technology</td><td>Q4 2026</td></tr>
+      <tr><td>5 — High</td><td>Form Industry Advisory Board with six to eight Upstate SC technology employer representatives</td><td>Program Director</td><td>Q4 2026</td></tr>
+      <tr><td>6 — High</td><td>Apply for NSF CISE Research Initiation Initiative grant for new faculty</td><td>Program Director and Sponsored Research</td><td>Q1 2027</td></tr>
+      <tr><td>7 — High</td><td>Launch digital recruitment campaign targeting Upstate SC working professionals</td><td>Marketing and Communications</td><td>Q2 2027</td></tr>
+      <tr><td>8 — Medium</td><td>Establish employer tuition benefit agreements with top 10 regional technology employers</td><td>Business Development</td><td>Q2 2027</td></tr>
+      <tr><td>9 — Medium</td><td>Begin ABET program evaluation consultation for future accreditation</td><td>Program Director</td><td>Fall 2027</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sub">Risk Mitigation Summary</h2>
+  <table>
+    <thead><tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation Strategy</th></tr></thead>
+    <tbody>
+      <tr><td>Below-target Year 1 enrollment</td><td>Medium</td><td>High</td><td>Pre-launch employer cohort commitment from two or three partners; adjust marketing allocation based on application velocity</td></tr>
+      <tr><td>Faculty recruitment in AI and ML</td><td>High</td><td>High</td><td>Recruit industry practitioners for elective courses; offer competitive market salary; use endowed chair funding if available</td></tr>
+      <tr><td>Georgia Tech OMSCS competition</td><td>High</td><td>Medium</td><td>Target students who value smaller cohorts, regional employer connections, and personal advising — segments where OMSCS structurally underdelivers</td></tr>
+      <tr><td>Curriculum keeping pace with AI advances</td><td>Medium</td><td>Medium</td><td>Annual curriculum review process built into program governance; Industry Advisory Board engagement on emerging skill needs</td></tr>
+      <tr><td>SACSCOC approval delay</td><td>Low</td><td>High</td><td>File substantive change early; schedule pre-consultation with SACSCOC staff before formal submission</td></tr>
+    </tbody>
+  </table>
+
+  <h2 class="sub">Closing Statement</h2>
+  <p>The case for an online MSCS at USC Upstate comes down to a straightforward observation: the Upstate South Carolina region is growing into a genuine technology hub, and its workforce development infrastructure has not kept pace. Skilled professionals in Spartanburg and Greenville who want a master's degree in Computer Science today must either commute to Clemson — if they can arrange a schedule that allows it — or enroll in a large national online program that has no particular stake in their local job market.</p>
+  <p>USC Upstate can offer something different: a graduate degree from a university with real roots in the community, taught by faculty who understand the regional employers, priced within reach of a working professional's budget. That combination is worth building. The five-year financial model shows it pays for itself. The market data shows the demand is there. The question is whether the institution moves before someone else does.</p>
+
+  <div style="margin-top:3rem; text-align:center; color:var(--muted); font-size:.82rem; border-top:1px solid var(--border); padding-top:1.5rem;">
+    <div style="color:var(--accent); font-family:'Merriweather',serif; font-size:1.1rem; font-weight:700; margin-bottom:.4rem;">University of South Carolina Upstate</div>
+    <div>800 University Way, Spartanburg, SC 29303</div>
+    <div>upstate.edu</div>
+    <div style="margin-top:.6rem;">Prepared by: Office of Academic Planning and Innovation — June 2026</div>
+    <div style="margin-top:.4rem; font-size:.75rem;">This document is intended for internal institutional planning. All enrollment and revenue projections are estimates based on available market data and peer program benchmarks.</div>
+  </div>
+
+  <div class="pg-foot"><span>USC Upstate — MS in Computer Science Feasibility Study</span><span>Page 7</span></div>
+</div>
+
+<!-- PAGE 8: REFERENCES -->
+<div class="page pg-break">
+  <h1 class="sec">References</h1>
+  <ol class="ref-list">
+    <li id="ref1">U.S. Bureau of Labor Statistics. (2024). <em>Occupational Outlook Handbook: Software Developers, Quality Assurance Analysts, and Testers.</em> Washington, DC: U.S. Department of Labor. Retrieved from <a href="https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm" target="_blank">https://www.bls.gov/ooh/computer-and-information-technology/software-developers.htm</a></li>
+    <li id="ref2">McKinsey Global Institute. (2025). <em>The State of AI in 2025: Workforce and Skills Implications.</em> New York: McKinsey and Company. Retrieved from <a href="https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai" target="_blank">https://www.mckinsey.com/ai-2025</a></li>
+    <li id="ref3">Computing Research Association. (2025). <em>Taulbee Survey: Production of PhDs, Employment of PhD Graduates, and Faculty Salaries in North American Computer Science and Computer Engineering Programs.</em> Washington, DC: CRA. Retrieved from <a href="https://cra.org/resources/taulbee-survey" target="_blank">https://cra.org/resources/taulbee-survey</a></li>
+    <li id="ref4">LinkedIn Economic Graph. (2025). <em>Jobs on the Rise: United States — 2025 Edition.</em> Sunnyvale, CA: LinkedIn Corporation. Retrieved from <a href="https://economicgraph.linkedin.com/research/jobs-on-the-rise" target="_blank">https://economicgraph.linkedin.com</a></li>
+    <li id="ref5">South Carolina Department of Commerce, Research Division. (2025). <em>South Carolina Technology Sector Employment Report: 2020–2025.</em> Columbia, SC: SCDOC. Retrieved from <a href="https://sccommerce.com/research" target="_blank">https://sccommerce.com/research</a></li>
+    <li id="ref6">South Carolina Department of Employment and Workforce. (2026). <em>Q1 2026 Occupational Demand Survey — Computing and Software Occupations.</em> Columbia, SC: SCDEW Labor Market Information. Retrieved from <a href="https://www.scdew.state.sc.us/labor-market" target="_blank">https://www.scdew.state.sc.us/labor-market</a></li>
+    <li id="ref7">National Center for Education Statistics. (2025). <em>Digest of Education Statistics 2024 — Table 323.10: Degrees in Computer and Information Sciences.</em> Washington, DC: U.S. Department of Education. Retrieved from <a href="https://nces.ed.gov/programs/digest/d24/tables/dt24_323.10.asp" target="_blank">https://nces.ed.gov/programs/digest</a></li>
+    <li id="ref8">Georgia Institute of Technology. (2026). <em>Online Master of Science in Computer Science (OMSCS) — Program Statistics.</em> Atlanta, GA: Georgia Tech College of Computing. Retrieved from <a href="https://omscs.gatech.edu/explore-oms-cs" target="_blank">https://omscs.gatech.edu</a></li>
+    <li id="ref9">ACM / IEEE-CS / AAAI Joint Task Force. (2023). <em>Computing Curricula 2023: Paradigms for Global Computing Education.</em> New York: Association for Computing Machinery. Retrieved from <a href="https://cc2023.acm.org" target="_blank">https://cc2023.acm.org</a></li>
+    <li id="ref10">Global Knowledge. (2025). <em>IT Skills and Salary Report 2025.</em> Cary, NC: Global Knowledge Training. Retrieved from <a href="https://www.globalknowledge.com/us-en/resources/resource-library/articles/it-skills-and-salary-survey" target="_blank">https://www.globalknowledge.com</a></li>
+    <li id="ref11">EDUVENTURES Research. (2024). <em>Online Graduate Program Enrollment Benchmarks: Regional Public Universities.</em> Boston, MA: Eduventures. Retrieved from <a href="https://www.eduventures.com/research" target="_blank">https://www.eduventures.com/research</a></li>
+    <li id="ref12">Southern Association of Colleges and Schools Commission on Colleges. (2024). <em>SACSCOC Policy on Substantive Change.</em> Decatur, GA: SACSCOC. Retrieved from <a href="https://sacscoc.org/app/uploads/2024/substantive-change-policy.pdf" target="_blank">https://sacscoc.org</a></li>
+  </ol>
+
+  <div class="pg-foot"><span>USC Upstate — MS in Computer Science Feasibility Study</span><span>Page 8</span></div>
+</div>
+
+<!-- CHARTS -->
+<script>
+const accent = '#1b4f72', gold = '#c5a858', garnet = '#73000a', grn = '#2e7d32', teal = '#0e6655';
+
+new Chart(document.getElementById('jobChart'), {
+  type:'bar',
+  data:{
+    labels:['2020','2021','2022','2023','2024','2025','2026P','2027P','2028P'],
+    datasets:[{label:'Open Positions (000s)',data:[1820,2040,2350,2720,3100,3480,3780,4010,4220],backgroundColor:accent,borderRadius:4}]
+  },
+  options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>v.toLocaleString()+'K'}}}}
+});
+
+new Chart(document.getElementById('salaryChart'), {
+  type:'bar',
+  data:{
+    labels:['Software Engineer','ML Engineer','Data Engineer','Cloud Architect','DevOps Engineer','Research Scientist'],
+    datasets:[{label:'Median Salary',data:[128000,152000,138000,165000,134000,148000],backgroundColor:[accent,garnet,gold,teal,'#8e44ad','#2980b9'],borderRadius:4}]
+  },
+  options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{ticks:{callback:v=>'$'+v.toLocaleString()}}}}
+});
+
+new Chart(document.getElementById('enrollTrendChart'), {
+  type:'line',
+  data:{
+    labels:['2015','2016','2017','2018','2019','2020','2021','2022','2023','2024'],
+    datasets:[
+      {label:'All Graduate CS Programs',data:[100,108,118,131,145,162,182,204,228,242],borderColor:accent,backgroundColor:accent+'22',fill:true,tension:.4},
+      {label:'Online Only',data:[100,112,128,148,170,205,248,298,352,411],borderColor:garnet,backgroundColor:garnet+'18',fill:true,tension:.4}
+    ]
+  },
+  options:{plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:false,title:{display:true,text:'Index (2015 = 100)'}}}}
+});
+
+new Chart(document.getElementById('posChart'), {
+  type:'bubble',
+  data:{
+    datasets:[
+      {label:'Georgia Tech (OMSCS)',data:[{x:9.5,y:2,r:30}],backgroundColor:'#c0392b88'},
+      {label:'U of Illinois (iMCS)',data:[{x:7.5,y:3.5,r:20}],backgroundColor:'#8e44ad88'},
+      {label:'UNC Charlotte',data:[{x:5,y:5,r:13}],backgroundColor:'#2980b988'},
+      {label:'Clemson (in-person only)',data:[{x:4,y:6.5,r:16}],backgroundColor:'#f39c1288'},
+      {label:'USC Upstate (proposed)',data:[{x:6.5,y:8.5,r:12}],backgroundColor:accent+'cc'},
+    ]
+  },
+  options:{
+    scales:{
+      x:{title:{display:true,text:'Program Scale (enrollment size)'},min:0,max:12},
+      y:{title:{display:true,text:'Regional Employer Integration'},min:0,max:11}
+    }
+  }
+});
+
+new Chart(document.getElementById('enrollChart'), {
+  type:'line',
+  data:{
+    labels:['Year 1','Year 2','Year 3','Year 4','Year 5'],
+    datasets:[
+      {label:'Total Active Students',data:[28,70,120,160,190],borderColor:accent,backgroundColor:accent+'22',fill:true,tension:.4},
+      {label:'Break-Even (30 students)',data:[30,30,30,30,30],borderColor:'#aaa',borderDash:[5,4],tension:0,pointRadius:0}
+    ]
+  },
+  options:{plugins:{legend:{position:'bottom'}},scales:{y:{beginAtZero:true}}}
+});
+
+new Chart(document.getElementById('finChart'), {
+  type:'bar',
+  data:{
+    labels:['Year 1','Year 2','Year 3','Year 4','Year 5'],
+    datasets:[
+      {label:'Revenue ($000s)',data:[336,840,1439,1919,2278],backgroundColor:grn+'bb',borderRadius:4},
+      {label:'Operating Cost ($000s)',data:[520,640,800,910,975],backgroundColor:garnet+'bb',borderRadius:4}
+    ]
+  },
+  options:{plugins:{legend:{position:'bottom'}},scales:{y:{ticks:{callback:v=>'$'+v+'K'}}}}
+});
+</script>
+</body>
+</html>
